@@ -10,7 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import { ArrowRight, ChevronRight, MoveRight, Play } from "lucide-react";
+import { Play } from "lucide-react";
 
 type Props = {
   likedSongs: LikedSong[];

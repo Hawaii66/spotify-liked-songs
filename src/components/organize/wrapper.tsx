@@ -6,13 +6,7 @@ import {
   type LikedSong,
   type Playlist,
 } from "@/types/spotify";
-import {
-  DndContext,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  type DragEndEvent,
-} from "@dnd-kit/core";
+import { DndContext, type DragEndEvent } from "@dnd-kit/core";
 import { useState } from "react";
 import LikedSongs from "./LikedSongs";
 import Playlists from "./Playlists";
