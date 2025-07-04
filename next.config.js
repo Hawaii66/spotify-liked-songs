@@ -5,6 +5,13 @@
 import "./src/env.js";
 
 /** @type {import("next").NextConfig} */
-const config = {};
+const config = {
+  images: {
+    remotePatterns: [
+      new URL("https://*.spotifycdn.com/**"),
+      new URL("https://*.scdn.co/**"),
+    ],
+  },
+};
 
 export default config;

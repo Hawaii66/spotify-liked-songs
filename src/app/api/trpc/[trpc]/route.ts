@@ -4,7 +4,8 @@ import { type NextRequest } from "next/server";
 import { env } from "@/env";
 import { appRouter } from "@/server/api/root";
 import { createTRPCContext } from "@/server/api/trpc";
-import { auth } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
+import SpotifyWebApi from "spotify-web-api-node";
 
 /**
  * This wraps the `createTRPCContext` helper and provides the required context for the tRPC API when
@@ -12,9 +13,34 @@ import { auth } from "@clerk/nextjs/server";
  */
 const createContext = async (req: NextRequest) => {
   const clerkAuth = await auth();
+
+  let spotifyApi: SpotifyWebApi | null = null;
+  let spotifyUserId: string | null = null;
+
+  if (clerkAuth) {
+    const userId = clerkAuth.userId;
+    if (userId) {
+      const clerkRes = await (
+        await clerkClient()
+      ).users.getUserOauthAccessToken(userId, "spotify");
+      const token = clerkRes.data[0]?.token ?? "";
+
+      spotifyApi = new SpotifyWebApi({
+        clientId: env.SPOTIFY_CLIENT_ID,
+        clientSecret: env.SPOTIFY_CLIENT_SECRET,
+        accessToken: token,
+      });
+
+      const spotifyUser = await spotifyApi.getMe();
+      spotifyUserId = spotifyUser.body.id;
+    }
+  }
+
   return createTRPCContext({
     headers: req.headers,
     auth: clerkAuth,
+    spotify: spotifyApi,
+    spotifyUserId,
   });
 };
 

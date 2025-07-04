@@ -8,6 +8,7 @@
  */
 import type { auth } from "@clerk/nextjs/server";
 import { initTRPC } from "@trpc/server";
+import type SpotifyWebApi from "spotify-web-api-node";
 import superjson from "superjson";
 import { ZodError } from "zod";
 type ClerkAuthObject = Awaited<ReturnType<typeof auth>>;
@@ -26,6 +27,8 @@ type ClerkAuthObject = Awaited<ReturnType<typeof auth>>;
 export const createTRPCContext = async (opts: {
   headers: Headers;
   auth: ClerkAuthObject;
+  spotify: SpotifyWebApi | null;
+  spotifyUserId: string | null;
 }) => {
   return {
     ...opts,
